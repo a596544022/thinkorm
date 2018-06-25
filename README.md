@@ -895,203 +895,104 @@ async _afterDelete(options) {
 ```
 
 ## 模型类属性
-<div class="doc">
-
-## 属性的定义
-
+```
+属性的定义
 创建一个模型类，我们需要定义以下几个主要的属性：
 
-    <span class="hljs-comment">// 模型名称</span>
-    <span class="hljs-keyword">this</span>.modelName = <span class="hljs-string">'user'</span>;
-    <span class="hljs-comment">// 主键</span>
-    <span class="hljs-keyword">this</span>.pk = <span class="hljs-string">'id'</span>;
-    <span class="hljs-comment">// 数据表名 可不用设置,默认为表前缀+模型名(小写,单词以下划线分隔)</span>
-    <span class="hljs-keyword">this</span>.tableName = <span class="hljs-string">'think_user'</span>;
-    <span class="hljs-comment">// 数据表字段信息</span>
-    <span class="hljs-keyword">this</span>.fields = {};
-    <span class="hljs-comment">// 数据验证</span>
-    <span class="hljs-keyword">this</span>.validations = {};
-    <span class="hljs-comment">// 关联关系(仅继承relModel有效)</span>
-    <span class="hljs-keyword">this</span>.relations = {};
+// 模型名称
+this.modelName = 'user';
+// 主键
+this.pk = 'id';
+// 数据表名 可不用设置,默认为表前缀+模型名(小写,单词以下划线分隔)
+this.tableName = 'think_user';
+// 数据表字段信息
+this.fields = {};
+// 数据验证
+this.validations = {};
+// 关联关系(仅继承relModel有效)
+this.relations = {};
 
-    `</pre>
+modelName
+定义模型名称，在关联模型描述中使用。
 
-    ### [](#modelname)modelName
+tableName
+定义数据库表名称。如果未设置（属性不存在），默认值为 表前缀+模型名(小写,单词以下划线分隔)：
 
-    定义模型名称，在关联模型描述中使用。
+user => think_user
 
-    ### [](#tablename)tableName
+user_profile => think_user_profile
 
-    定义数据库表名称。如果未设置（属性不存在），默认值为 表前缀+模型名(小写,单词以下划线分隔)：
+UserGroup => think_user_group
 
-    <pre>`user =&gt; think_user
+fields:
+定义数据字段，格式为：
 
-    user_profile =&gt; think_user_profile
 
-    UserGroup =&gt; think_user_group
+title: {
+    type: 'string',
+    index: true,
+    size: 100,
+    required: true,
+    unique: true,
+    pk: true
+}
 
-    `</pre>
+属性	描述	描述
+type	数据字段类型	见下表
+size	数据字段长度	值为整数
+defaults	数据字段默认值	根据字段类型取值，json默认值为{}或[]，array默认值为[]
+required	数据字段是否必须有值	true或false
+unique	数据字段值唯一	true或false
+index	是否索引	true或false
+pk	是否主键	true或false
+字段数据类型	描述
+string	字符型
+text	文本型
+integer	整型
+float	浮点型
+json	json格式
+array	数组格式
+validations:
+validations属性定义了模型类的验证规则。如果验证返回错误，会中断新增及更新操作。定义格式：
 
-    ### [](#toc-5f5)fields:
 
-    定义数据字段，格式为：
+this.validations = {
+    type: {
+        method: 'ADD', //仅在新增时验证
+        valid: ['required'],
+        msg: {
+            required: '活动类别必填'
+        }
 
-    <pre>`
-    title: {
-        type: <span class="hljs-string">'string'</span>,
-        index: <span class="hljs-literal">true</span>,
-        size: <span class="hljs-number">100</span>,
-        required: <span class="hljs-literal">true</span>,
-        unique: <span class="hljs-literal">true</span>,
-        pk: <span class="hljs-literal">true</span>
-    }
-
-    `</pre>
-    <table>
-    <thead>
-    <tr>
-    <th>属性</th>
-    <th>描述</th>
-    <th>描述</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td>type</td>
-    <td>数据字段类型</td>
-    <td>见下表</td>
-    </tr>
-    <tr>
-    <td>size</td>
-    <td>数据字段长度</td>
-    <td>值为整数</td>
-    </tr>
-    <tr>
-    <td>defaults</td>
-    <td>数据字段默认值</td>
-    <td>根据字段类型取值，json默认值为{}或[]，array默认值为[]</td>
-    </tr>
-    <tr>
-    <td>required</td>
-    <td>数据字段是否必须有值</td>
-    <td>true或false</td>
-    </tr>
-    <tr>
-    <td>unique</td>
-    <td>数据字段值唯一</td>
-    <td>true或false</td>
-    </tr>
-    <tr>
-    <td>index</td>
-    <td>是否索引</td>
-    <td>true或false</td>
-    </tr>
-    <tr>
-    <td>pk</td>
-    <td>是否主键</td>
-    <td>true或false</td>
-    </tr>
-    </tbody>
-    </table>
-    <table>
-    <thead>
-    <tr>
-    <th>字段数据类型</th>
-    <th>描述</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td>string</td>
-    <td>字符型</td>
-    </tr>
-    <tr>
-    <td>text</td>
-    <td>文本型</td>
-    </tr>
-    <tr>
-    <td>integer</td>
-    <td>整型</td>
-    </tr>
-    <tr>
-    <td>float</td>
-    <td>浮点型</td>
-    </tr>
-    <tr>
-    <td>json</td>
-    <td>json格式</td>
-    </tr>
-    <tr>
-    <td>array</td>
-    <td>数组格式</td>
-    </tr>
-    </tbody>
-    </table>
-
-    ### [](#toc-07a)validations:
-
-    validations属性定义了模型类的验证规则。如果验证返回错误，会中断新增及更新操作。定义格式：
-
-    <pre>`
-    <span class="hljs-keyword">this</span>.validations = {
-        type: {
-            method: <span class="hljs-string">'ADD'</span>, <span class="hljs-comment">//仅在新增时验证</span>
-            valid: [<span class="hljs-string">'required'</span>],
-            msg: {
-                required: <span class="hljs-string">'活动类别必填'</span>
-            }
-
-        },
-        phonenum: {
-            method: <span class="hljs-string">'UPDATE'</span>,<span class="hljs-comment">//仅在更新时验证</span>
-            valid: [<span class="hljs-string">'required'</span>,<span class="hljs-string">'mobile'</span>],
-            msg: {
-                required: <span class="hljs-string">'手机号必填'</span>,
-                mobile: <span class="hljs-string">'请输入正确的手机号'</span>
-            }
+    },
+    phonenum: {
+        method: 'UPDATE',//仅在更新时验证
+        valid: ['required','mobile'],
+        msg: {
+            required: '手机号必填',
+            mobile: '请输入正确的手机号'
         }
     }
+}
 
-    `</pre>
-    <table>
-    <thead>
-    <tr>
-    <th>属性</th>
-    <th>描述</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td>method</td>
-    <td>触发验证的操作。ALL新增和更新均验证，ADD新增时验证，UPDATE更新时验证。</td>
-    </tr>
-    <tr>
-    <td>valid</td>
-    <td>验证规则，多个验证规则使用数组</td>
-    </tr>
-    <tr>
-    <td>msg</td>
-    <td>当某个规则未通过时返回的错误提示。msg对象的key和规则名对应</td>
-    </tr>
-    </tbody>
-    </table>
+属性	描述
+method	触发验证的操作。ALL新增和更新均验证，ADD新增时验证，UPDATE更新时验证。
+valid	验证规则，多个验证规则使用数组
+msg	当某个规则未通过时返回的错误提示。msg对象的key和规则名对应
+使用方法:
 
-    使用方法:
 
-    <pre>`
-    userModel.add(data);<span class="hljs-comment">//自动验证规则定义的type字段,phonenum新增不会验证</span>
+userModel.add(data);//自动验证规则定义的type字段,phonenum新增不会验证
 
-    userModel.where({id: <span class="hljs-number">1</span>}).update(data);<span class="hljs-comment">//data如果包含phonenum则验证</span>
+userModel.where({id: 1}).update(data);//data如果包含phonenum则验证
 
 valid定义规则，支持多个规则匹配，msg则定义了不满足规则时的错误提示。
 
-详细说明见[数据验证](/orm/validations.jhtml)
+详细说明见数据验证
 
-### [](#relations)relations
-
-定义了模型关联关系，仅当模型继承了relModel类才生效。详细用法请参照文档：[关联模型](/orm/relation.jhtml)
-
-</div>
+relations
+定义了模型关联关系，仅当模型继承了relModel类才生效。详细用法请参照文档：关联模型
+```
 ## 文档
 
 [https://www.thinkkoa.org/orm/](https://www.thinkkoa.org/orm/index.jhtml)
